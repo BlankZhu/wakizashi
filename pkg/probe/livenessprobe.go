@@ -28,11 +28,11 @@ type LivenessProbe interface {
 }
 
 // singleton
-var probe Probe
+var probe LivenessProbe
 var once sync.Once
 
 // GetLivenessProbe get the shipperProbe server
-func GetLivenessProbe() Probe {
+func GetLivenessProbe() LivenessProbe {
 	once.Do(func() {
 		lp := livenessProbe{}
 		probe = &lp

@@ -38,7 +38,7 @@ var once sync.Once
 func Get() *wlogger {
 	once.Do(func() {
 		wlog = &wlogger{}
-		wlog.init(DebugLevel)
+		wlog.init()
 	})
 	return wlog
 }
