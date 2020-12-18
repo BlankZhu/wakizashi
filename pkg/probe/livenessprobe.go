@@ -1,8 +1,15 @@
-/*
-Package livenessprobe describes the liveness probe used by wakizashi.
-This is possible for k8s or other custom monitor to check wakizashi's liveness.
-*/
-package livenessprobe
+// Package probe describe the HTTP probe used by wakizashi for status monitoring.
+// This file is related to liveness probe.
+// Liveness probe make it possible for k8s or other custom monitor to check wakizashi's liveness.
+// Example:
+// 	go func() {
+//		p := probe.GetLivenessProbe()
+//		err := p.Start(8080)
+// 	}
+//	...
+//  p := probe.GetLivenessProbe()
+//  p.SetLiveness(false)
+package probe
 
 import (
 	"net/http"
@@ -10,8 +17,8 @@ import (
 	"sync"
 )
 
-// Probe Interface  probe for k8s on path: /healthz
-type Probe interface {
+// LivenessProbe Interface  probe for k8s on path: /healthz
+type LivenessProbe interface {
 	// Start starts the liveness probe on given prot
 	Start(uint16) error
 	// Stop will stop the liveness probe
