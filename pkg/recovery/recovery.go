@@ -1,3 +1,20 @@
+// Package recovery describe the recovery mechanism used by wakizashi for error posting handling.
+// Example:
+//  r := recovery.Get()
+//  err := r.Init(recovFile, posFile, recovLimit, cacheSize, postFunc)
+//  if err != nil {
+//  ...
+//  }
+//  go func() {
+//  	for {
+// 			select {
+// 				case <-time.After(60 * time.Second):
+// 				r.RepostRecord()
+// 			}
+// 		}
+//  }()
+//  ...
+//  r.Add2Recovery(record)
 package recovery
 
 import (
