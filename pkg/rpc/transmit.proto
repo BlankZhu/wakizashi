@@ -6,7 +6,7 @@ package transmit;
 
 // transmit service defines the behaviour of uploading traffic data
 service transmit {
-    rpc transmit(stream UploadRequest) returns (UploadReply) {}
+    rpc transmit(stream TransmitRequest) returns (TransmitReply) {}
 }
 
 message TransmitRequest {
