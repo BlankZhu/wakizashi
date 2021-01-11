@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = ".;transmit";
+
+package transmit;
+
+// transmit service defines the behaviour of uploading traffic data
+service transmit {
+    rpc transmit(stream UploadRequest) returns (UploadReply) {}
+}
+
+message TransmitRequest {
+    uint64 timestamp = 1;
+    string srcIP = 2;
+    string dstIP = 3;
+    string podIP = 4;
+    uint64 size = 5;
+}
+
+message TransmitReply {
+    bool res = 1;
+    string detail = 2;
+}
