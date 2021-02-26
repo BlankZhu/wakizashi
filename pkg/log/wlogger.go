@@ -1,4 +1,5 @@
 // Package wlogger describe the liveness probe used by wakizashi.
+// ATTENTION: this package is deprecated
 // This is possible for k8s or other custom monitor to check wakizashi's liveness.
 // Example:
 // 	wlog := wlogger.Get()
