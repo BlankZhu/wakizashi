@@ -69,11 +69,11 @@ func (d *Dumper) dump() {
 	decoded := []gopacket.LayerType{}
 
 	for {
-		d, p, err := handle.ZeroCopyReadPacketData()
+		data, ci, err := handle.ZeroCopyReadPacketData()
 		if err != nil {
 			logrus.Warnf("failed to zero copy afpacket data, detail: %s", err)
 		}
-		parser.DecodeLayers(d, &decoded)
+		parser.DecodeLayers(data, &decoded)
 		for _, lt := range decoded {
 			switch lt {
 			case layers.LayerTypeIPv4:
@@ -91,7 +91,7 @@ func (d *Dumper) dump() {
 				rd := &entity.RawTrafficRecord{
 					SrcIP: ipv4.SrcIP.String(),
 					DstIP: ipv4.DstIP.String(),
-					Size:  p.Length,
+					Size:  uint64(ci.Length),
 				}
 				d.rawDataCh <- rd
 			}
