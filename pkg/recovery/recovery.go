@@ -18,9 +18,8 @@
 package recovery
 
 import (
-	wconst "BlankZhu/wakizashi/pkg/const"
+	"BlankZhu/wakizashi/pkg/constant"
 	"BlankZhu/wakizashi/pkg/entity"
-	wlogger "BlankZhu/wakizashi/pkg/log"
 	"bufio"
 	"bytes"
 	"encoding/json"
@@ -29,6 +28,8 @@ import (
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 // RecoverPostFunc define the actual re-post behaviour of the recovery
@@ -110,7 +111,7 @@ func (r *recovery) Init(recoveryFilePath, positionFilePath string, recoveryLengt
 						r.FlushRecords()
 					}
 					r.cacheMutex.Unlock()
-				case <-time.After(60 * time.Second * wconst.RecoveryFlushInterval / 6):
+				case <-time.After(60 * time.Second * constant.RecoveryFlushInterval / 6):
 					r.cacheMutex.Lock()
 					r.FlushRecords()
 					r.cacheMutex.Unlock()
@@ -123,7 +124,6 @@ func (r *recovery) Init(recoveryFilePath, positionFilePath string, recoveryLengt
 
 // RepostRecord read recovery file, then do the recovery reposting
 func (r *recovery) RepostRecord() {
-	wlog := wlogger.Get()
 	r.recoveryMutex.Lock()
 	defer r.recoveryMutex.Unlock()
 
@@ -134,12 +134,12 @@ func (r *recovery) RepostRecord() {
 	rf, err := os.OpenFile(r.recoveryFilePath, os.O_RDONLY|os.O_CREATE, 0666)
 	defer rf.Close()
 	if err != nil {
-		wlog.Errorf("Failed to open recovery file, detail: %s", err.Error())
+		logrus.Errorf("Failed to open recovery file, detail: %s", err)
 		return
 	}
 	_, err = rf.Seek(pos, 0)
 	if err != nil {
-		wlog.Errorf("Failed to seek recovery file, detail: %s", err.Error())
+		logrus.Errorf("Failed to seek recovery file, detail: %s", err)
 		return
 	}
 	// read history records
@@ -157,7 +157,7 @@ func (r *recovery) RepostRecord() {
 
 		err = r.post(&record)
 		if err != nil {
-			wlog.Warningf("Failed to post record, detail: %d", err.Error())
+			logrus.Warningf("Failed to post record, detail: %d", err)
 			failedRecords = append(failedRecords, record)
 		}
 	}
@@ -170,19 +170,19 @@ func (r *recovery) RepostRecord() {
 	for _, record := range failedRecords {
 		str, err := record.ToJSONString()
 		if err != nil {
-			wlog.Warningf("Failed to parse to JSON string: %v", record)
+			logrus.Warningf("Failed to parse to JSON string: %v", record)
 			continue
 		}
 		_, err = rf.WriteString(str + "\n")
 		if err != nil {
-			wlog.Errorf("Failed to write recovery file, with reocrd: %s", str)
+			logrus.Errorf("Failed to write recovery file, with reocrd: %s", str)
 			continue
 		}
 	}
 
 	err = r.writePosition(pos)
 	if err != nil {
-		wlog.Errorf("Failed to write position file, detail: %s", err.Error())
+		logrus.Errorf("Failed to write position file, detail: %s", err)
 	}
 	return
 }
@@ -193,14 +193,12 @@ func (r *recovery) FlushRecords() {
 		return
 	}
 
-	wlog := wlogger.Get()
-
 	r.recoveryMutex.Lock()
 	defer r.recoveryMutex.Unlock()
 
 	f, err := os.OpenFile(r.recoveryFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
-		wlog.Errorf("Failed to open recovery file, detail: %s", err.Error())
+		logrus.Errorf("Failed to open recovery file, detail: %s", err)
 		return
 	}
 	w := bufio.NewWriter(f)
@@ -208,12 +206,12 @@ func (r *recovery) FlushRecords() {
 	for _, record := range r.cache {
 		str, err := record.ToJSONString()
 		if err != nil {
-			wlog.Warningf("Failed to parse to JSON string: %v", record)
+			logrus.Warningf("Failed to parse to JSON string: %v", record)
 			continue
 		}
 		_, err = w.WriteString(str + "\n")
 		if err != nil {
-			wlog.Warningf("Failed to write string to recovery file, detail: %s", err.Error())
+			logrus.Warningf("Failed to write string to recovery file, detail: %s", err)
 		}
 	}
 
@@ -222,7 +220,7 @@ func (r *recovery) FlushRecords() {
 
 	err = w.Flush()
 	if err != nil {
-		wlog.Warningf("Flush error, detail: %s", err.Error())
+		logrus.Warningf("Flush error, detail: %s", err)
 	}
 }
 
@@ -236,28 +234,26 @@ func (r *recovery) post(record *entity.TrafficRecord) error {
 }
 
 func (r *recovery) clearRecord(pos int64) int64 {
-	wlog := wlogger.Get()
-
 	err := os.Remove(r.recoveryFilePath)
 	if err != nil {
-		wlog.Errorf("Failed to remove recovery file, detail: %s", err.Error())
+		logrus.Errorf("Failed to remove recovery file, detail: %s", err)
 		return pos
 	}
 	rf, err := os.OpenFile(r.recoveryFilePath, os.O_CREATE, 0666)
 	if err != nil {
-		wlog.Errorf("Failed to re-create recovery file, detail: %s", err.Error())
+		logrus.Errorf("Failed to re-create recovery file, detail: %s", err)
 		return 0
 	}
 	rf.Close()
 
 	err = os.Remove(r.positionFilePath)
 	if err != nil {
-		wlog.Errorf("Failed to remove position file, detail: %s", err.Error())
+		logrus.Errorf("Failed to remove position file, detail: %s", err)
 		return 0
 	}
 	pf, err := os.OpenFile(r.recoveryFilePath, os.O_CREATE, 0666)
 	if err != nil {
-		wlog.Errorf("Failed to re-create position file, detail: %s", err.Error())
+		logrus.Errorf("Failed to re-create position file, detail: %s", err)
 		return 0
 	}
 	pf.Close()
@@ -266,21 +262,20 @@ func (r *recovery) clearRecord(pos int64) int64 {
 }
 
 func (r *recovery) getPosition() int64 {
-	wlog := wlogger.Get()
 	r.positionMutex.Lock()
 	defer r.positionMutex.Unlock()
 	var ret int64 = 0
 
 	posData, err := ioutil.ReadFile(r.positionFilePath)
 	if err != nil {
-		wlog.Warningf("Failed to open position file, detail: %s", err.Error())
+		logrus.Warningf("Failed to open position file, detail: %s", err)
 		return ret
 	}
 
 	if len(posData) != 0 {
 		ret, err = strconv.ParseInt(string(posData), 10, 64)
 		if err != nil {
-			wlog.Warningf("Cannot parse position data, detail: %s", err.Error())
+			logrus.Warningf("Cannot parse position data, detail: %s", err)
 		}
 	}
 	return ret
