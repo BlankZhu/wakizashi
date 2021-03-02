@@ -20,4 +20,11 @@ const (
 
 	// ProbeTransmitTimeout timeout for probe to transmit data to center, in sec
 	ProbeTransmitTimeout = 60
+
+	// BackendInfluxDB backend name of the influxdb
+	BackendInfluxDB = "influxdb"
+	// BackendMongoDB backend name of the mongodb
+	BackendMongoDB = "mongodb"
+	// BackendRedis backend name of the reids
+	BackendRedis = "redis"
 )

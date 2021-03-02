@@ -10,11 +10,11 @@ import (
 
 // CenterConfig describe the configuration for traffic convergent center
 type CenterConfig struct {
-	LogLev      int               `yaml:"logLev"`      // log level
-	Port        uint16            `yaml:"port"`        // port to listen for grpc
-	HealthPort  uint16            `yaml:"healthPort"`  // port for health probe
-	RecovDir    string            `yaml:"recoverDir"`  // directory to store the recovery info
-	DataBackend DataBackendConfig `yaml:"dataBackend"` // config of database used by center
+	LogLev        int           `yaml:"logLev"`        // log level
+	Port          uint16        `yaml:"port"`          // port to listen for grpc
+	HealthPort    uint16        `yaml:"healthPort"`    // port for health probe
+	RecovDir      string        `yaml:"recoverDir"`    // directory to store the recovery info
+	BackendConfig BackendConfig `yaml:"backendConfig"` // configuration for specific data storage backend
 }
 
 // LoadConfigFromYAML load config from given path
