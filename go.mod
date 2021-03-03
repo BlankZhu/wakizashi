@@ -6,6 +6,7 @@ require (
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/gopacket v1.1.19
+	github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab
 	github.com/kr/text v0.2.0 // indirect
 	github.com/magefile/mage v1.11.0 // indirect
 	github.com/sirupsen/logrus v1.8.0

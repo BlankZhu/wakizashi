@@ -1,24 +1,49 @@
 package backend
 
-import "BlankZhu/wakizashi/pkg/entity"
+import (
+	"BlankZhu/wakizashi/pkg/config"
+	"BlankZhu/wakizashi/pkg/entity"
+	"sync"
 
-type InfluxClient struct {
+	iclient "github.com/influxdata/influxdb1-client/v2"
+	"github.com/sirupsen/logrus"
+)
+
+var iClient *influxClient
+var iOnce sync.Once
+
+type influxClient struct {
+	client *iclient.Client
 }
 
-func (ic *InfluxClient) Init() {
+func (ic *influxClient) Init(cfg *config.BackendConfig) {
+	iOnce.Do(func() {
+		cli, err := iclient.NewHTTPClient(
+			iclient.HTTPConfig{
+				Addr:     cfg.Host,
+				Username: cfg.User,
+				Password: cfg.Password,
+			},
+		)
+		if err != nil {
+			logrus.Fatalf("failed to create influxDB client, detail: %s", err)
+		}
+		iClient = &influxClient{
+			client: &cli,
+		}
+	})
+}
+
+func (ic *influxClient) Close() {
 	// TODO
 }
 
-func (ic *InfluxClient) Close() {
-	// TODO
-}
-
-func (ic *InfluxClient) Write(record *entity.TrafficRecord) error {
+func (ic *influxClient) Write(record *entity.TrafficRecord) error {
 	// TODO
 	return nil
 }
 
-func (ic *InfluxClient) WriteBatch(record []*entity.TrafficRecord) error {
+func (ic *influxClient) WriteBatch(record []*entity.TrafficRecord) error {
 	// TODO
 	return nil
 }
