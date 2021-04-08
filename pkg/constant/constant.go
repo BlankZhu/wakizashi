@@ -27,4 +27,9 @@ const (
 	BackendMongoDB = "mongodb"
 	// BackendRedis backend name of the reids
 	BackendRedis = "redis"
+
+	// DefaultWakizashiDatabase default database name
+	DefaultWakizashiDatabase = "wakizashi"
+	// DefaultWakizashiTable default table name
+	DefaultWakizashiTable = "wakizashi"
 )
