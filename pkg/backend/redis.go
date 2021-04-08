@@ -1,16 +1,27 @@
 package backend
 
-import "BlankZhu/wakizashi/pkg/entity"
+import (
+	"BlankZhu/wakizashi/pkg/config"
+	"BlankZhu/wakizashi/pkg/entity"
+)
 
 type RedisClient struct {
 }
 
-func (rc *RedisClient) Init() {
+func CreateRedisClient(cfg config.BackendConfig) *RedisClient {
 	// TODO
+	ret := &RedisClient{}
+	return ret
 }
 
-func (rc *RedisClient) Close() {
+func (rc *RedisClient) Connect() error {
 	// TODO
+	return nil
+}
+
+func (rc *RedisClient) Close() error {
+	// TODO
+	return nil
 }
 
 func (rc *RedisClient) Write(record *entity.TrafficRecord) error {
