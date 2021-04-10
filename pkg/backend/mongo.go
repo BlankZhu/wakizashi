@@ -16,7 +16,7 @@ type MongoClient struct {
 	cfg    config.BackendConfig
 }
 
-func CreateMongoClient(cfg config.BackendConfig) *MongoClient {
+func createMongoClient(cfg config.BackendConfig) *MongoClient {
 	cli, err := mongo.NewClient(options.Client().ApplyURI(cfg.MongoCfg.MongoURI))
 	if err != nil {
 		logrus.Fatalf("failed to create mongoDB client, detail: %s", err)

@@ -8,7 +8,7 @@ import (
 type RedisClient struct {
 }
 
-func CreateRedisClient(cfg config.BackendConfig) *RedisClient {
+func createRedisClient(cfg config.BackendConfig) *RedisClient {
 	// TODO
 	ret := &RedisClient{}
 	return ret

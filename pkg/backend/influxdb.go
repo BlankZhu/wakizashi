@@ -14,7 +14,7 @@ type influxClient struct {
 	cfg    config.BackendConfig
 }
 
-func CreateInfluxClient(cfg config.BackendConfig) *influxClient {
+func createInfluxClient(cfg config.BackendConfig) *influxClient {
 	cli, err := iclient.NewHTTPClient(
 		iclient.HTTPConfig{
 			Addr:     cfg.InfluxCfg.Host,

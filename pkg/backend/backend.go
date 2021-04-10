@@ -23,11 +23,11 @@ func Init(cfg config.BackendConfig) {
 	once.Do(func() {
 		switch cfg.Type {
 		case constant.BackendInfluxDB:
-			backend = CreateMongoClient(cfg)
+			backend = createMongoClient(cfg)
 		case constant.BackendRedis:
-			backend = CreateInfluxClient(cfg)
+			backend = createInfluxClient(cfg)
 		case constant.BackendMongoDB:
-			backend = CreateRedisClient(cfg)
+			backend = createRedisClient(cfg)
 		default:
 			logrus.Fatalf("invalid backend type %s", cfg.Type)
 		}
