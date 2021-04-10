@@ -3,6 +3,19 @@ package constant
 const (
 	// Recovery Related constants
 
+	// CenterDefaultConfigPath default config path for wakizashi's center
+	CenterDefaultConfigPath = "./center-config.yaml"
+	// ProbeDefaultConfigPath default config path for wakiazashi's probe
+	ProbeDefaultConfigPath = "./probe-config.yaml"
+	// RecoveryDefaultFileName default recovery file name
+	RecoveryDefaultFileName = "rcv_data"
+	// RecoveryDefaultPosName default position file name
+	RecoveryDefaultPosName = "pos_data"
+	// RecoveryDefaultPosLimit position limitation for recovery data file
+	RecoveryDefaultPosLimit = (1 << 20) * 10 //10M
+	// RecoveryDefaultCacheSize cache size for recovery
+	RecoveryDefaultCacheSize = 128
+
 	// RecoveryFlushInterval flush interval of recovery in min
 	RecoveryFlushInterval = 1
 	// DefaultChanCap default capacity of the channel used by wakizashi
@@ -28,8 +41,8 @@ const (
 	// BackendRedis backend name of the reids
 	BackendRedis = "redis"
 
-	// DefaultWakizashiDatabase default database name
-	DefaultWakizashiDatabase = "wakizashi"
-	// DefaultWakizashiTable default table name
-	DefaultWakizashiTable = "wakizashi"
+	// WakizashiDefaultDatabase default database name
+	WakizashiDefaultDatabase = "wakizashi"
+	// WakizashiDefaultTable default table name
+	WakizashiDefaultTable = "wakizashi"
 )
