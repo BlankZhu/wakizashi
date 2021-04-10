@@ -21,8 +21,8 @@ type BackendConfig struct {
 
 func NewBackendConfig() *BackendConfig {
 	ret := &BackendConfig{}
-	ret.Database = constant.DefaultWakizashiDatabase
-	ret.Table = constant.DefaultWakizashiTable
+	ret.Database = constant.WakizashiDefaultDatabase
+	ret.Table = constant.WakizashiDefaultTable
 	return ret
 }
 
