@@ -1,0 +1,30 @@
+FROM golang:1.14-alpine3.12 as builder
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \
+    apk add --no-cache git && \
+    apk add --no-cache build-base && \
+    apk add --no-cache linux-headers
+
+# APP_NAME=probe, center
+ARG APP_NAME
+ARG VERSION
+WORKDIR /usr/wakizashi
+COPY . .
+RUN GO111MODULE=on GOPROXY=https://goproxy.cn,direct go build -ldflags \
+    "-X main.buildTime=`date +%Y-%m-%d,%H:%M:%S` -X main.buildVersion=${VERSION} -X main.gitCommitID=`git rev-parse HEAD`" \
+    -o main \
+    ./cmd/${APP_NAME} && \
+    mv /usr/wakizashi/config/${APP_NAME}-config.yaml /usr/wakizashi/config/config.yaml
+##
+
+FROM alpine:latest
+
+RUN mkdir -p /usr/wakizashi &&\
+    mkdir -p /usr/wakizashi/config
+
+WORKDIR /usr/wakizashi
+
+COPY --from=builder /usr/wakizashi/main /usr/wakizashi/
+COPY --from=builder /usr/wakizashi/config/config.yaml /usr/wakizashi/config
+
+ENTRYPOINT [ "./main", "-c", "./config/config.yaml", "-v", "true"]
