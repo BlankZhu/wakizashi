@@ -1,5 +1,3 @@
-# docker build -t probe:1.0.0 -f ./Dockerfile --build-arg APP_NAME=appname VERSION=1.0.0 .
-
 FROM golang:1.14-alpine3.12 as builder
 
 RUN apk add --no-cache git &&\
@@ -9,9 +7,8 @@ RUN apk add --no-cache git &&\
 # APP_NAME=probe, center
 ARG APP_NAME
 ARG VERSION
-
-COPY . .
 WORKDIR /usr/wakizashi
+COPY . .
 RUN GO111MODULE=on go build -ldflags \
     "-X main.buildTime=`date +%Y-%m-%d,%H:%M:%S` -X main.buildVersion=${VERSION} -X main.gitCommitID=`git rev-parse HEAD`" \
     -o main \
@@ -22,7 +19,7 @@ RUN GO111MODULE=on go build -ldflags \
 FROM alpine:latest
 
 RUN mkdir -p /usr/wakizashi &&\
-    mkdir -p /usr/wakizashi/config &&
+    mkdir -p /usr/wakizashi/config
 
 WORKDIR /usr/wakizashi
 
