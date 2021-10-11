@@ -1,0 +1,9 @@
+centerAddr: 0.0.0.0:10080 # where the center is running
+logLev: 0 # log level, increases from 0 representing Debug, Info, Warning, Error, Fatal
+dumpDir: ./dump # directory for temp dumping
+networkDevs:  # network devices' names where the probe will be working on
+  - eth0
+  - tunl0
+autoClear: true # decide if to remove the caputre files or not automatically
+capInterval: 30 # interval of rotating dump file, in second; if non-positive, use 1
+uploadRetry: 5  # count of retry to upload traffic status to center; if 0, never retry

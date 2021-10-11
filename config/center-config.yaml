@@ -1,4 +1,4 @@
-logLev: 0 # log level, increase from 0 representing Debug, Info, Warning, Error, Fatal
+logLev: 0 # log level, increases from 0 representing Debug, Info, Warning, Error, Fatal
 port: 10080 # which port the center is running
 healthPort: 10081 # health check of center
 recoverDir: "./recovery"  # recovery directory if DB I/O error eccurs
