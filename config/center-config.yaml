@@ -1,0 +1,14 @@
+logLev: 0 # log level, increase from 0 representing Debug, Info, Warning, Error, Fatal
+port: 10080 # which port the center is running
+healthPort: 10081 # health check of center
+recoverDir: "./recovery"  # recovery directory if DB I/O error eccurs
+recoverInterval: 30 # recovery's repost interval, in second
+backendConfig:  # config for DB backend
+  type: influxdb  # influxdb/redis/mongodb
+  timeout: 5  # DB I/O timeout, in second
+  database: wakizashi
+  table: traffic
+  influxConfig:
+    host: http://10.10.10.35:18086
+    user: admin
+    password: pass
